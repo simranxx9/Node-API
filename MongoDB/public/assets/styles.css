@@ -1,0 +1,11 @@
+body{
+  background: pink;
+  font-size:24px;
+}
+ul li:hover{
+  text-decoration: line-through;
+  cursor: pointer;
+}
+span{
+  width:50%;
+}
