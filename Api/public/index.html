@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>React app</title>
+    </head>
+    <body>
+        <div class="ninja-container">
+            <h1>Rest API</h1>
+            <div id="root"></div>
+        </div>
+    <script src="https://unpkg.com/babel-standalone@6/babel.js"></script>
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    
+    
+    <script type="text/babel">
+
+        class Ninjas extends React.Component{
+
+            state={
+                    ninjas:[]
+            }
+           
+            render(){
+                const ninjas = this.state.ninjas;
+    
+                return(
+                    <div>
+                        <form onSubmit={this.handleSubmit}>
+                            <label>Longitude:</label>
+                            <input type="text" ref="lng" required />
+                            <label>Lattitude:</label>
+                            <input type="text" ref="lat" required />
+                            <input type="submit" value="Find" />
+                        </form>
+                        <ul>{ninjas?ninjas.map((ninja,index)=>{
+                        return(
+                            <li key={index}>
+                                <span>{ninja.name} </span>
+                                <span>{ninja.belt} --></span>
+                                <span>{Math.floor(ninja.dist.calculated/1000)} km</span>
+                            </li>
+                        )
+                        
+                        }):(<li>Sorry No match</li>)}</ul>
+                        
+                    </div>
+                )
+            }
+            handleSubmit=(e)=>{
+                e.preventDefault();
+                const lng = this.refs.lng.value;
+                const lat = this.refs.lat.value;
+
+                fetch('/api/ninja?lng='+lng+"&lat="+lat).then(data => {
+                   return data.json();
+                }).then(json => {
+                    console.log(json);
+                    this.setState({
+                        ninjas:json
+                    })
+                }).catch(err => {
+                        // Do something for an error here
+                    console.log("Error Reading data " + err);
+                });
+
+            }
+            
+        }
+
+        ReactDOM.render(<Ninjas />,document.getElementById('root'));
+
+    </script>
+    
+  </body>
+</html>
